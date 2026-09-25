@@ -1,0 +1,10 @@
+# Context is the repository root: only the docs sources and the changelog are needed.
+*
+!CHANGELOG.md
+!docs/
+docs/node_modules
+docs/.nuxt
+docs/.output
+docs/.data
+docs/.changelog
+docs/dist

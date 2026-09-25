@@ -1,0 +1,18 @@
+api_platform:
+    title: Rocket Auth API
+    version: 1.0.0
+    formats:
+        jsonld: ['application/ld+json']
+        json: ['application/json']
+    patch_formats:
+        json: ['application/merge-patch+json']
+    swagger:
+        api_keys:
+            JWT:
+                name: Authorization
+                type: header
+    defaults:
+        stateless: true
+        pagination_client_items_per_page: true
+        cache_headers:
+            vary: ['Content-Type', 'Authorization', 'Origin', 'X-Impersonate-User']

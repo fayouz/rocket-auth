@@ -1,0 +1,129 @@
+# Local stack: `docker compose up -d --build` then open http://localhost:3100
+# Test LDAP directory: `LDAP_ENABLED=1 LDAP_ADMIN_GROUP_DN=cn=rocket-admins,ou=groups,dc=example,dc=org docker compose --profile ldap up -d`
+# then sync from the Users page or `docker compose exec api php bin/console app:ldap:sync` (see docker/ldap/50-people.ldif).
+name: rocket-auth
+
+x-api-env: &api-env
+  APP_ENV: prod
+  APP_SECRET: ${APP_SECRET:-change-me-in-production}
+  DATABASE_URL: postgresql://app:${POSTGRES_PASSWORD:-app}@database:5432/app?serverVersion=16&charset=utf8
+  MESSENGER_TRANSPORT_DSN: doctrine://default
+  JWT_PASSPHRASE: ${JWT_PASSPHRASE:-change-me-in-production}
+  # First-run setup (creation of the administrator): optional secret asked by the setup page.
+  SETUP_TOKEN: ${SETUP_TOKEN:-}
+  # Encrypts the secrets stored in the database (empty: derived from APP_SECRET).
+  SECRETS_ENCRYPTION_KEY: ${SECRETS_ENCRYPTION_KEY:-}
+  CORS_ALLOW_ORIGIN: ${CORS_ALLOW_ORIGIN:-^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$$}
+  LDAP_ENABLED: ${LDAP_ENABLED:-0}
+  LDAP_URL: ${LDAP_URL:-ldap://ldap:389}
+  LDAP_BASE_DN: ${LDAP_BASE_DN:-ou=people,dc=example,dc=org}
+  LDAP_SEARCH_DN: ${LDAP_SEARCH_DN:-cn=admin,dc=example,dc=org}
+  LDAP_SEARCH_PASSWORD: ${LDAP_SEARCH_PASSWORD:-adminpassword}
+  LDAP_USER_FILTER: ${LDAP_USER_FILTER:-(objectClass=inetOrgPerson)}
+  LDAP_ADMIN_GROUP_DN: ${LDAP_ADMIN_GROUP_DN:-}
+  # Defaults only: once saved in Administration → Annuaire LDAP, the database configuration applies.
+  LDAP_START_TLS: ${LDAP_START_TLS:-0}
+  LDAP_ATTRIBUTE_EMAIL: ${LDAP_ATTRIBUTE_EMAIL:-mail}
+  LDAP_ATTRIBUTE_FIRST_NAME: ${LDAP_ATTRIBUTE_FIRST_NAME:-givenName}
+  LDAP_ATTRIBUTE_LAST_NAME: ${LDAP_ATTRIBUTE_LAST_NAME:-sn}
+  LDAP_ATTRIBUTE_GROUPS: ${LDAP_ATTRIBUTE_GROUPS:-memberOf}
+  # Updates: releases checked on GitHub, and one-click update through the "updater" service (profile "updater").
+  UPDATE_REPOSITORY: ${UPDATE_REPOSITORY:-fayouz/rocket-auth}
+  UPDATER_URL: ${UPDATER_URL:-http://updater:8080}
+  UPDATER_TOKEN: ${UPDATER_TOKEN:-}
+
+services:
+  database:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: app
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-app}
+    healthcheck:
+      test: ["CMD", "pg_isready", "-d", "app", "-U", "app"]
+      interval: 5s
+      retries: 10
+    volumes:
+      - database_data:/var/lib/postgresql/data
+
+  api:
+    build:
+      context: ./backend
+      args:
+        APP_VERSION: ${APP_VERSION:-dev}
+    image: ${API_IMAGE:-rocket-auth-api}
+    labels: &updatable
+      # Updated by the "updater" service (Watchtower only touches labelled containers).
+      com.centurylinklabs.watchtower.enable: "true"
+    environment:
+      <<: *api-env
+      RUN_MIGRATIONS: "1"
+    volumes:
+      - jwt_keys:/app/config/jwt
+      - app_data:/app/var/data
+    ports:
+      - "8100:80"
+    depends_on:
+      database:
+        condition: service_healthy
+
+  worker:
+    image: ${API_IMAGE:-rocket-auth-api}
+    labels: *updatable
+    environment: *api-env
+    command: ["php", "bin/console", "messenger:consume", "async", "scheduler_default", "--time-limit=3600", "-vv"]
+    restart: unless-stopped
+    volumes:
+      - jwt_keys:/app/config/jwt
+      - app_data:/app/var/data
+    depends_on:
+      - api
+
+  front:
+    build:
+      context: ./frontend
+      args:
+        APP_VERSION: ${APP_VERSION:-dev}
+    image: ${FRONT_IMAGE:-rocket-auth-front}
+    labels: *updatable
+    environment:
+      NUXT_PUBLIC_API_BASE: ${PUBLIC_API_BASE:-http://localhost:8100}
+      NUXT_API_INTERNAL_BASE: http://api:80
+      NUXT_PUBLIC_DOCS_URL: ${PUBLIC_DOCS_URL:-https://github.com/fayouz/rocket-auth/tree/develop/docs/content}
+      NUXT_PUBLIC_CHANGELOG_URL: ${PUBLIC_CHANGELOG_URL:-https://github.com/fayouz/rocket-auth/blob/develop/CHANGELOG.md}
+    ports:
+      - "3100:3000"
+    depends_on:
+      - api
+
+  # One-click update (Administration → Mises à jour): pulls the new images of the labelled containers and restarts them.
+  # Needs published images (API_IMAGE=ghcr.io/fayouz/rocket-auth-api:latest, FRONT_IMAGE=ghcr.io/fayouz/rocket-auth-front:latest)
+  # and a secret shared with the api: UPDATER_TOKEN. Start with `docker compose --profile updater up -d`.
+  updater:
+    profiles: ["updater"]
+    image: nickfedor/watchtower:1.22
+    environment:
+      WATCHTOWER_HTTP_API_UPDATE: "true"
+      WATCHTOWER_HTTP_API_TOKEN: ${UPDATER_TOKEN:-}
+      WATCHTOWER_LABEL_ENABLE: "true"
+      WATCHTOWER_CLEANUP: "true"
+    volumes:
+      # Docker access: this container can manage the host's containers. Keep its port unpublished.
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: unless-stopped
+
+  ldap:
+    profiles: ["ldap"]
+    image: osixia/openldap:1.5.0
+    command: ["--copy-service"]
+    environment:
+      LDAP_ORGANISATION: Example
+      LDAP_DOMAIN: example.org
+      LDAP_ADMIN_PASSWORD: adminpassword
+    volumes:
+      - ./docker/ldap:/container/service/slapd/assets/config/bootstrap/ldif/custom:ro
+
+volumes:
+  database_data:
+  jwt_keys:
+  app_data:

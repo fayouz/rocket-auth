@@ -1,0 +1,46 @@
+parameters:
+    env(LDAP_ENABLED): '0'
+    env(LDAP_URL): 'ldap://localhost:389'
+    env(LDAP_BASE_DN): ''
+    env(LDAP_SEARCH_DN): ''
+    env(LDAP_SEARCH_PASSWORD): ''
+    env(LDAP_USER_FILTER): '(objectClass=inetOrgPerson)'
+    env(LDAP_ADMIN_GROUP_DN): ''
+    env(LDAP_START_TLS): '0'
+    env(LDAP_ATTRIBUTE_EMAIL): 'mail'
+    env(LDAP_ATTRIBUTE_FIRST_NAME): 'givenName'
+    env(LDAP_ATTRIBUTE_LAST_NAME): 'sn'
+    env(LDAP_ATTRIBUTE_GROUPS): 'memberOf'
+    env(SETUP_TOKEN): ''
+    env(SECRETS_ENCRYPTION_KEY): ''
+    # Directory of the data written by the application (checked on the dashboard).
+    env(DATA_DIR): '%kernel.project_dir%/var/data'
+    # Update check (GitHub releases of this repository; empty: disabled) and one-click update (Watchtower HTTP API).
+    env(APP_VERSION): ''
+    env(UPDATE_REPOSITORY): 'fayouz/rocket-auth'
+    env(UPDATER_URL): ''
+    env(UPDATER_TOKEN): ''
+    env(UPDATE_METHOD): ''
+    env(UPDATE_SCRIPT): '%kernel.project_dir%/../deploy/update.sh'
+    env(UPDATE_RESTART_COMMAND): ''
+    env(UPDATE_SCRIPT_TIMEOUT): '1800'
+    env(DEMO_MODE): '0'
+    env(DEMO_APP_TOKEN): ''
+    # Demo single sign-on provider (app:demo:seed): issuer, URL seen from the API, client and admin group.
+    env(DEMO_SSO_ISSUER): ''
+    env(DEMO_SSO_INTERNAL_URL): ''
+    env(DEMO_SSO_CLIENT_ID): ''
+    env(DEMO_SSO_CLIENT_SECRET): ''
+    env(DEMO_SSO_ADMIN_GROUP): ''
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    App\:
+        resource: '../src/'
+
+when@test:
+    services:
+        App\Tests\Support\HttpMock: ~

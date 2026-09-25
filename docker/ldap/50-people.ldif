@@ -1,0 +1,32 @@
+# Test directory loaded by the "ldap" compose profile (password for every account: "password").
+dn: ou=people,dc=example,dc=org
+objectClass: organizationalUnit
+ou: people
+
+dn: ou=groups,dc=example,dc=org
+objectClass: organizationalUnit
+ou: groups
+
+dn: uid=jdupont,ou=people,dc=example,dc=org
+objectClass: inetOrgPerson
+uid: jdupont
+cn: Jean Dupont
+givenName: Jean
+sn: Dupont
+mail: jean.dupont@example.org
+userPassword: password
+
+dn: uid=mmartin,ou=people,dc=example,dc=org
+objectClass: inetOrgPerson
+uid: mmartin
+cn: Marie Martin
+givenName: Marie
+sn: Martin
+mail: marie.martin@example.org
+userPassword: password
+
+# groupOfUniqueNames: the image's memberOf overlay fills "memberOf" on members of this class.
+dn: cn=rocket-admins,ou=groups,dc=example,dc=org
+objectClass: groupOfUniqueNames
+cn: rocket-admins
+uniqueMember: uid=mmartin,ou=people,dc=example,dc=org
