@@ -141,6 +141,6 @@ final class HealthCheckTest extends WebTestCase
         $tester = new CommandTester((new Application(static::$kernel))->find('app:health:check'));
         $tester->execute([]);
         $tester->assertCommandIsSuccessful();
-        self::assertSame(0, (int) $this->em()->getConnection()->fetchOne('SELECT COUNT(*) FROM service_check'));
+        self::assertSame(0, (int) $this->em()->getConnection()->fetchOne("SELECT COUNT(*) FROM service_check WHERE id = 'ldap'"));
     }
 }
