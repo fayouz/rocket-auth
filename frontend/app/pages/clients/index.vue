@@ -227,7 +227,7 @@ async function copy(text: string) {
                 <UInput v-model="form.icon" class="w-full font-mono" :leading-icon="form.icon || undefined" placeholder="i-lucide-app-window" />
               </UFormField>
             </div>
-            <UFormField label="URL de retour (redirect URI)" required hint="ex. https://mailer.exemple.com/auth/callback">
+            <UFormField label="URL de retour (redirect URI)" required hint="ex. https://print.exemple.com/auth/callback">
               <UInputTags v-model="form.redirectUris" add-on-blur add-on-paste class="w-full" data-testid="redirect-uris" />
             </UFormField>
             <UFormField label="URL après déconnexion (optionnel)" hint="post_logout_redirect_uri">

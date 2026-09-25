@@ -31,10 +31,12 @@ security:
             jwt: ~
             custom_authenticators:
                 - Rocket\Core\Security\ApplicationTokenAuthenticator
+                - Rocket\Core\Security\EmbedTokenAuthenticator
 
     access_control:
         - { path: ^/api/auth/login$, roles: PUBLIC_ACCESS }
         - { path: ^/api/(setup|suite|suite/apps)$, roles: PUBLIC_ACCESS }
+        - { path: ^/api/embed/frame-policy$, roles: PUBLIC_ACCESS }
         - { path: ^/api/auth/(providers|oidc/callback)$, roles: PUBLIC_ACCESS }
         # OpenID Connect provider: pages of the interface that work without a session.
         - { path: ^/api/oauth/(authorize/cancel|logout)$, roles: PUBLIC_ACCESS }
