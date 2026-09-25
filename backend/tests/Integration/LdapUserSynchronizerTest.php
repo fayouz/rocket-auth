@@ -8,6 +8,7 @@ use App\Ldap\DirectoryUser;
 use App\Ldap\LdapDirectory;
 use App\Ldap\LdapUserSynchronizer;
 use App\Ldap\UserDirectoryInterface;
+use App\Repository\AuthenticationServerRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -54,6 +55,7 @@ final class LdapUserSynchronizerTest extends KernelTestCase
         return new LdapUserSynchronizer(
             $directory,
             $container->get(UserRepository::class),
+            $container->get(AuthenticationServerRepository::class),
             $container->get(EntityManagerInterface::class),
             new LockFactory(new InMemoryStore()),
         );

@@ -192,7 +192,7 @@ jobs:
           curl -fsS $FRONT/api/me -H "Authorization: Bearer $TOKEN" | jq -e '.roles | index("ROLE_ADMIN")'
           # Version of the images, shown by the API and the interface; no one-click update without UPDATER_TOKEN
           curl -fsS $FRONT/api/system/version -H "Authorization: Bearer $TOKEN" | jq -e '.version == "0.0.0-ci"'
-          curl -fsS $FRONT/api/system/update -H "Authorization: Bearer $TOKEN" | jq -e '.current.release == "0.0.0-ci" and .updater.configured == false'
+          curl -fsS $FRONT/api/system/update -H "Authorization: Bearer $TOKEN" | jq -e '.current.release == "0.0.0-ci" and .method == "manual" and .methods.docker.configured == false'
           curl -fsS $FRONT/login | grep -q 'appVersion:"v0.0.0-ci"'
           # LDAP settings (environment until saved): the connection test finds the directory's users
           curl -fsS $FRONT/api/ldap/config -H "Authorization: Bearer $TOKEN" | jq -e '.source == "environment" and .enabled'
