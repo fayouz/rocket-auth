@@ -4,6 +4,10 @@ export default defineNuxtRouteMiddleware(async (to) => {
 
   // End of a single sign-on: the page completes it itself.
   if (to.path === '/auth/callback') return
+  // OpenID Connect provider: sign-out works without a session; an authorization with prompt=none must not
+  // show the login page (the application gets "login_required").
+  if (to.path === '/logout') return
+  if (to.path === '/authorize' && !useAuth().token.value && String(to.query.prompt ?? '').split(' ').includes('none')) return
 
   const auth = useAuth()
 

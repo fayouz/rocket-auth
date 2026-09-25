@@ -94,6 +94,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['user:read', 'user:write'])]
     private bool $enabled = true;
 
+    /**
+     * Groups sent to applications in the "groups" claim (scope "groups"): managed here, or copied from the directory for LDAP accounts.
+     *
+     * @var list<string>
+     */
+    #[ORM\Column(options: ['default' => '[]'])]
+    #[Assert\All([new Assert\NotBlank(), new Assert\Length(max: 100)])]
+    #[Groups(['user:read', 'user:write'])]
+    private array $groups = [];
+
     use TrackedTrait;
 
     public function __construct()
@@ -266,6 +276,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setExternalId(?string $externalId): static
     {
         $this->externalId = $externalId;
+
+        return $this;
+    }
+
+    /** @return list<string> */
+    public function getGroups(): array
+    {
+        return $this->groups;
+    }
+
+    /** @param list<string> $groups */
+    public function setGroups(array $groups): static
+    {
+        $this->groups = array_values(array_unique(array_filter(array_map('trim', $groups), static fn (string $g) => '' !== $g)));
 
         return $this;
     }

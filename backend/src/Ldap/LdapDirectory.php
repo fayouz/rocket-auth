@@ -106,8 +106,15 @@ final class LdapDirectory implements AuthenticationConnectorInterface
                     array_map('mb_strtolower', $this->all($entry, $attributes['groups'])),
                     true,
                 ),
+                groups: array_values(array_unique(array_map(self::groupName(...), $this->all($entry, $attributes['groups'])))),
             );
         }
+    }
+
+    /** "cn=rocket-admins,ou=groups,dc=example,dc=org" → "rocket-admins" (the value itself when it is not a DN). */
+    public static function groupName(string $dn): string
+    {
+        return preg_match('/^\s*cn=((?:[^,\\\\]|\\\\.)+)/i', $dn, $match) ? stripslashes($match[1]) : $dn;
     }
 
     private function connect(LdapConfig $config, ?int $networkTimeout = null): LdapInterface

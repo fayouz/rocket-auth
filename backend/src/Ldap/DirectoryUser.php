@@ -11,6 +11,8 @@ final readonly class DirectoryUser
         public ?string $lastName = null,
         /** null when the directory does not manage the admin role (no LDAP_ADMIN_GROUP_DN). */
         public ?bool $admin = null,
+        /** @var list<string> names (CN) of the directory groups the user belongs to */
+        public array $groups = [],
     ) {
     }
 }

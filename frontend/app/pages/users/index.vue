@@ -81,14 +81,38 @@ const columns: TableColumn<User>[] = [
       }),
     ]),
   },
+  {
+    accessorKey: 'groups',
+    header: 'Groupes',
+    cell: ({ row }) => h('div', { class: 'flex flex-wrap gap-1' }, row.original.groups.length
+      ? row.original.groups.map(group => h(UBadge, { label: group, variant: 'outline', color: 'neutral', size: 'sm' }))
+      : [h('span', { class: 'text-muted' }, '—')]),
+  },
   { accessorKey: 'ldapSyncedAt', header: 'Synchro LDAP', cell: ({ row }) => formatDate(row.original.ldapSyncedAt) },
   {
     id: 'actions',
-    cell: ({ row }) => row.original.source === 'local'
-      ? h(UButton, { icon: 'i-lucide-key', color: 'neutral', variant: 'ghost', 'aria-label': 'Changer le mot de passe', onClick: () => (passwordFor.value = row.original) })
-      : null,
+    cell: ({ row }) => h('div', { class: 'flex justify-end gap-1' }, [
+      // Directory accounts get their groups from LDAP at each synchronization.
+      row.original.source !== 'ldap'
+        ? h(UButton, { 'icon': 'i-lucide-users-round', 'color': 'neutral', 'variant': 'ghost', 'aria-label': 'Groupes', 'data-testid': 'edit-groups', 'onClick': () => editGroups(row.original) })
+        : null,
+      row.original.source === 'local'
+        ? h(UButton, { icon: 'i-lucide-key', color: 'neutral', variant: 'ghost', 'aria-label': 'Changer le mot de passe', onClick: () => (passwordFor.value = row.original) })
+        : null,
+    ]),
   },
 ]
+
+// Groups sent to applications ("groups" claim)
+const groupsFor = ref<User | null>(null)
+const groups = ref<string[]>([])
+function editGroups(user: User) {
+  groupsFor.value = user
+  groups.value = [...user.groups]
+}
+async function saveGroups() {
+  if (groupsFor.value && await patch(groupsFor.value, { groups: groups.value })) groupsFor.value = null
+}
 
 // Create a local user
 // Opened directly by "Nouvel utilisateur" on the dashboard.
@@ -194,6 +218,23 @@ async function syncLdap(dryRun: boolean) {
           <div class="flex w-full justify-end gap-2">
             <UButton label="Annuler" color="neutral" variant="ghost" @click="createOpen = false" />
             <UButton type="submit" form="create-user" label="Créer" />
+          </div>
+        </template>
+      </UModal>
+
+      <UModal
+        :open="groupsFor !== null"
+        :title="`Groupes de ${groupsFor?.displayName}`"
+        description="Transmis aux applications qui demandent le scope « groups » (revendication groups), par exemple pour donner le rôle administrateur."
+        @update:open="(value: boolean) => { if (!value) groupsFor = null }"
+      >
+        <template #body>
+          <UInputTags v-model="groups" add-on-blur add-on-paste placeholder="rocket-admins" class="w-full" data-testid="groups-input" />
+        </template>
+        <template #footer>
+          <div class="flex w-full justify-end gap-2">
+            <UButton label="Annuler" color="neutral" variant="ghost" @click="groupsFor = null" />
+            <UButton label="Enregistrer" @click="saveGroups" />
           </div>
         </template>
       </UModal>

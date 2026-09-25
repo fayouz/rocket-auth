@@ -20,6 +20,8 @@ export interface User extends UserSummary, Tracked {
   ldapDn: string | null
   ldapSyncedAt: string | null
   enabled: boolean
+  /** Sent to applications in the "groups" claim. */
+  groups: string[]
 }
 
 export interface Me {
@@ -276,4 +278,42 @@ export interface UpdateStatus {
   }
   run: UpdateRun | null
   history: UpdateRun[]
+}
+
+export type OAuthScope = 'openid' | 'profile' | 'email' | 'groups' | 'offline_access'
+export type OAuthGrant = 'authorization_code' | 'refresh_token' | 'client_credentials'
+
+/** An application signing its users in with Rocket Auth (/api/oauth/clients). */
+export interface OAuthClient extends Tracked {
+  id: string
+  name: string
+  description: string | null
+  clientId: string
+  secretHint: string | null
+  /** Only in the creation response. */
+  plainSecret?: string
+  confidential: boolean
+  redirectUris: string[]
+  postLogoutRedirectUris: string[]
+  allowedScopes: OAuthScope[]
+  grantTypes: OAuthGrant[]
+  trusted: boolean
+  enabled: boolean
+  lastUsedAt: string | null
+}
+
+export interface Consent {
+  id: string
+  clientName: string
+  clientDescription: string | null
+  scopes: OAuthScope[]
+  grantedAt: string
+  lastUsedAt: string | null
+}
+
+/** GET /api/oauth/authorize: what the application asks for. */
+export interface AuthorizationCheck {
+  client: { id: string, name: string, description: string | null, trusted: boolean, redirectHost: string }
+  scopes: { name: OAuthScope, description: string }[]
+  consentRequired: boolean
 }

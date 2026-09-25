@@ -47,10 +47,10 @@ export function useAuth() {
     return me.value
   }
 
-  async function logout() {
+  async function logout(redirect = true) {
     setToken(null)
     me.value = null
-    await navigateTo('/login')
+    if (redirect) await navigateTo('/login')
   }
 
   return { token: readonly(token), me, isAuthenticated, isAdmin, authorizationHeader, login, startSession, fetchMe, logout }

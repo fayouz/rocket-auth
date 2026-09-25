@@ -86,6 +86,7 @@ final class LdapUserSynchronizer
                 ->setFirstName($entry->firstName)
                 ->setLastName($entry->lastName)
                 ->setRoles($roles)
+                ->setGroups($entry->groups)
                 ->setPassword(null)
                 ->setEnabled(true)
                 ->setAuthenticationServer($authenticationServer)

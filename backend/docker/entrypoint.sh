@@ -3,6 +3,8 @@ set -e
 
 # JWT keys: mount them (config/jwt) in production; generated once otherwise.
 php bin/console lexik:jwt:generate-keypair --skip-if-exists --no-interaction >/dev/null
+# OpenID Connect signing key (same volume as the JWT keys).
+php bin/console app:oidc:generate-key --no-interaction >/dev/null
 
 if [ "${RUN_MIGRATIONS:-0}" = "1" ]; then
     php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration

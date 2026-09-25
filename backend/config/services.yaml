@@ -15,6 +15,13 @@ parameters:
     env(SECRETS_ENCRYPTION_KEY): ''
     # Directory of the data written by the application (checked on the dashboard).
     env(DATA_DIR): '%kernel.project_dir%/var/data'
+    # OpenID Connect provider: issuer (public URL of this API), signing key, token lifetimes (seconds).
+    env(OIDC_ISSUER): 'http://localhost:8100'
+    env(OIDC_PRIVATE_KEY): '%kernel.project_dir%/config/jwt/oidc-private.pem'
+    env(OIDC_ACCESS_TOKEN_TTL): '900'
+    env(OIDC_ID_TOKEN_TTL): '3600'
+    env(OIDC_REFRESH_TOKEN_TTL): '2592000'
+    env(FRONTEND_URL): 'http://localhost:3100'
     # Update check (GitHub releases of this repository; empty: disabled) and one-click update (Watchtower HTTP API).
     env(APP_VERSION): ''
     env(UPDATE_REPOSITORY): 'fayouz/rocket-auth'
@@ -32,6 +39,8 @@ parameters:
     env(DEMO_SSO_CLIENT_ID): ''
     env(DEMO_SSO_CLIENT_SECRET): ''
     env(DEMO_SSO_ADMIN_GROUP): ''
+    # Demo OAuth clients (app:demo:seed): "clientId|Name|secret|redirect URI|post-logout URI", separated by ";".
+    env(DEMO_OAUTH_CLIENTS): ''
 
 services:
     _defaults:

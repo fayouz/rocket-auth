@@ -9,6 +9,10 @@ x-demo-env: &demo-env
   LDAP_ENABLED: "1"
   LDAP_ADMIN_GROUP_DN: cn=rocket-admins,ou=groups,dc=example,dc=org
   CORS_ALLOW_ORIGIN: ^http://localhost:3100$$
+  # The applications of the Rocket middleware, declared as OAuth clients (see demo/README.md).
+  DEMO_OAUTH_CLIENTS: >-
+    rocket-mailer|Rocket Mailer|demo-rocket-mailer-client-secret|http://localhost:3000/auth/callback|http://localhost:3000/login;
+    rocket-cloud|Rocket Cloud|demo-rocket-cloud-client-secret|http://localhost:3200/auth/callback|http://localhost:3200/login
 
 services:
   ldap:
