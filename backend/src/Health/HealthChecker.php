@@ -11,10 +11,12 @@ use App\Repository\AuthenticationServerRepository;
 use App\Repository\ServiceCheckRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Clock\ClockInterface;
+use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
 use Symfony\Component\Lock\LockFactory;
 
 /**
- * Network checks of the LDAP server and of the OpenID Connect providers (discovery document).
+ * Network checks of the LDAP server, of the OpenID Connect providers (discovery document) and of the dependencies
+ * declared by the domain modules (App\Health\ServiceProbeInterface).
  * Run by the scheduler every 5 minutes, or on demand from the dashboard; results kept in ServiceCheck.
  */
 class HealthChecker
@@ -28,7 +30,15 @@ class HealthChecker
         private readonly LockFactory $locks,
         private readonly AuthenticationServerRepository $servers,
         private readonly OidcClient $oidc,
+        /** @var iterable<ServiceProbeInterface> */
+        #[AutowireIterator('app.service_probe')]
+        private readonly iterable $probes = [],
     ) {
+    }
+
+    public static function probeCheckId(ServiceProbeInterface $probe, string $item): string
+    {
+        return \sprintf('%s:%s', $probe->id(), $item);
     }
 
     public static function oidcCheckId(AuthenticationServer $server): string
@@ -66,6 +76,17 @@ class HealthChecker
                     $this->record($existing, $seen, self::oidcCheckId($server), true, 'Fournisseur joignable : '.$metadata['issuer'], $start);
                 } catch (\Throwable $e) {
                     $this->record($existing, $seen, self::oidcCheckId($server), false, $e->getMessage(), $start);
+                }
+            }
+
+            foreach ($this->probes as $probe) {
+                foreach ($probe->targets() as $item => $target) {
+                    $start = hrtime(true);
+                    try {
+                        $this->record($existing, $seen, self::probeCheckId($probe, $item), true, ($target['check'])(), $start);
+                    } catch (\Throwable $e) {
+                        $this->record($existing, $seen, self::probeCheckId($probe, $item), false, $e->getMessage(), $start);
+                    }
                 }
             }
 
