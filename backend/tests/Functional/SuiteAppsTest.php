@@ -33,5 +33,6 @@ final class SuiteAppsTest extends WebTestCase
         $this->assertStatus(200);
         self::assertSame([['id' => 'print', 'name' => 'Rocket Print', 'url' => 'https://print.example.org', 'icon' => 'i-lucide-printer', 'description' => null]], $apps['apps']);
         self::assertSame(1, $this->em()->getRepository(OAuthClient::class)->count(['homeUrl' => null]));
+        self::assertSame('http://localhost:3100', $apps['account']);
     }
 }
