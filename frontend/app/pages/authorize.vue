@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { RouteLocationNormalized } from 'vue-router'
 import type { AuthorizationCheck } from '~/types/api'
 
 /**
@@ -6,7 +7,11 @@ import type { AuthorizationCheck } from '~/types/api'
  * The user is signed in to Rocket Auth here (the middleware sends them to /login first): they approve, or not,
  * and the browser goes back to the application with a one-time code.
  */
-definePageMeta({ layout: 'bare' })
+definePageMeta({
+  layout: 'bare',
+  // prompt=none: never the login page, the application gets "login_required" instead.
+  public: (to: RouteLocationNormalized) => !useAuth().token.value && String(to.query.prompt ?? '').split(' ').includes('none'),
+})
 const app = useAppConfig().rocket
 useHead({ title: `Autorisation · ${app.name}` })
 

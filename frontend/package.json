@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@nuxt/ui": "^4.11.2",
+    "@rocket/core": "github:fayouz/rocket-core#claude/practical-cray-rz3j2q",
     "nuxt": "^4.5.2",
     "tailwindcss": "^4.3.3"
   },

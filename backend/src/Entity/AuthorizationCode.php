@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Rocket\Core\Entity\User;
 use App\Repository\AuthorizationCodeRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;

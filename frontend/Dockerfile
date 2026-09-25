@@ -1,5 +1,7 @@
 # syntax=docker/dockerfile:1.7
 FROM node:22-alpine AS build
+# git: the rocket-core layer is an npm dependency from GitHub.
+RUN apk add --no-cache git
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci --no-audit --no-fund

@@ -11,8 +11,9 @@ x-demo-env: &demo-env
   CORS_ALLOW_ORIGIN: ^http://localhost:3100$$
   # The applications of the Rocket middleware, declared as OAuth clients (see demo/README.md).
   DEMO_OAUTH_CLIENTS: >-
-    rocket-mailer|Rocket Mailer|demo-rocket-mailer-client-secret|http://localhost:3000/auth/callback|http://localhost:3000/login;
-    rocket-cloud|Rocket Cloud|demo-rocket-cloud-client-secret|http://localhost:3200/auth/callback|http://localhost:3200/login
+    rocket-mailer|Rocket Mailer|demo-rocket-mailer-client-secret|http://localhost:3000/auth/callback|http://localhost:3000/login?logged_out=1|http://localhost:3000|i-lucide-mail;
+    rocket-cloud|Rocket Cloud|demo-rocket-cloud-client-secret|http://localhost:3200/auth/callback|http://localhost:3200/login?logged_out=1|http://localhost:3200|i-lucide-cloud;
+    rocket-print|Rocket Print|demo-rocket-print-client-secret|http://localhost:3300/auth/callback|http://localhost:3300/login?logged_out=1|http://localhost:3300|i-lucide-printer
 
 services:
   ldap:

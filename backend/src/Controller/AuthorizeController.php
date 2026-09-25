@@ -6,7 +6,7 @@ use App\OAuth\AuthorizationError;
 use App\OAuth\AuthorizationServer;
 use App\OAuth\Scopes;
 use App\Repository\OAuthClientRepository;
-use App\Security\ActorContext;
+use Rocket\Core\Security\ActorContext;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -110,7 +110,7 @@ final class AuthorizeController extends AbstractController
         $clientId = $request->query->getString('client_id');
         if ('' === $clientId && '' !== $hint = $request->query->getString('id_token_hint')) {
             try {
-                [, $claims] = \App\Oidc\Jwt::decode($hint);
+                [, $claims] = \Rocket\Core\Oidc\Jwt::decode($hint);
                 $clientId = \is_string($claims['aud'] ?? null) ? $claims['aud'] : '';
             } catch (\Throwable) {
             }

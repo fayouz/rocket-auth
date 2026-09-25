@@ -3,7 +3,8 @@
  * Sign-out page of the OpenID Connect provider (end_session_endpoint): ends the Rocket Auth session, then goes
  * back to the application when it registered this address (post_logout_redirect_uri).
  */
-definePageMeta({ layout: 'bare' })
+// Works without a session too.
+definePageMeta({ layout: 'bare', public: true })
 const app = useAppConfig().rocket
 useHead({ title: `Déconnexion · ${app.name}` })
 

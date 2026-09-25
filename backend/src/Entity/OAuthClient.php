@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Rocket\Core\Entity\TrackedTrait;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
@@ -104,6 +105,19 @@ class OAuthClient
     #[Assert\All([new Assert\Choice(choices: self::GRANT_TYPES)])]
     #[Groups(['oauth_client:read', 'oauth_client:write'])]
     private array $grantTypes = ['authorization_code', 'refresh_token'];
+
+    /** Address of the application: shown in the application switcher of the suite (GET /api/suite/apps) when set. */
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Length(max: 255)]
+    #[Assert\Url(requireTld: false)]
+    #[Groups(['oauth_client:read', 'oauth_client:write'])]
+    private ?string $homeUrl = null;
+
+    /** Icon in the switcher, e.g. "i-lucide-printer". */
+    #[ORM\Column(length: 80, nullable: true)]
+    #[Assert\Regex(pattern: '/^i-[a-z0-9-]+$/', message: 'An icon name such as "i-lucide-printer".')]
+    #[Groups(['oauth_client:read', 'oauth_client:write'])]
+    private ?string $icon = null;
 
     /** First-party application: users are not asked for their consent. */
     #[ORM\Column]
@@ -346,5 +360,29 @@ class OAuthClient
     private static function cleanList(array $values): array
     {
         return array_values(array_unique(array_filter(array_map('trim', $values), static fn (string $v) => '' !== $v)));
+    }
+
+    public function getHomeUrl(): ?string
+    {
+        return $this->homeUrl;
+    }
+
+    public function setHomeUrl(?string $homeUrl): static
+    {
+        $this->homeUrl = '' === trim((string) $homeUrl) ? null : trim((string) $homeUrl);
+
+        return $this;
+    }
+
+    public function getIcon(): ?string
+    {
+        return $this->icon;
+    }
+
+    public function setIcon(?string $icon): static
+    {
+        $this->icon = '' === trim((string) $icon) ? null : trim((string) $icon);
+
+        return $this;
     }
 }

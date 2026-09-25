@@ -7,12 +7,12 @@ use App\Entity\Consent;
 use App\Entity\OAuthClient;
 use App\Entity\RefreshToken;
 use App\Entity\SignInEvent;
-use App\Entity\User;
+use Rocket\Core\Entity\User;
 use App\Repository\AuthorizationCodeRepository;
 use App\Repository\ConsentRepository;
 use App\Repository\OAuthClientRepository;
 use App\Repository\RefreshTokenRepository;
-use App\Oidc\Jwt;
+use Rocket\Core\Oidc\Jwt;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Clock\ClockInterface;
 

@@ -7,7 +7,7 @@ use App\OAuth\AuthorizationServer;
 use App\OAuth\Scopes;
 use App\OAuth\SigningKeys;
 use App\OAuth\TokenIssuer;
-use App\Repository\UserRepository;
+use Rocket\Core\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\JsonResponse;

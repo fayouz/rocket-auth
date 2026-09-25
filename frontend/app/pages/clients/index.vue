@@ -81,6 +81,8 @@ const EMPTY = {
   name: '',
   description: '',
   clientId: '',
+  homeUrl: '',
+  icon: '',
   confidential: true,
   trusted: false,
   redirectUris: [] as string[],
@@ -107,6 +109,8 @@ function edit(client: OAuthClient) {
     name: client.name,
     description: client.description ?? '',
     clientId: client.clientId,
+    homeUrl: client.homeUrl ?? '',
+    icon: client.icon ?? '',
     confidential: client.confidential,
     trusted: client.trusted,
     redirectUris: [...client.redirectUris],
@@ -120,7 +124,7 @@ function edit(client: OAuthClient) {
 const revealed = ref<{ client: OAuthClient, secret: string | null } | null>(null)
 
 async function submit() {
-  const body = { ...form, description: form.description || null }
+  const body = { ...form, description: form.description || null, homeUrl: form.homeUrl || null, icon: form.icon || null }
   if (editing.value) {
     const { clientId: _clientId, confidential: _confidential, ...changes } = body
     if (await patch(editing.value, changes)) formOpen.value = false
@@ -215,6 +219,14 @@ async function copy(text: string) {
             <UFormField label="Description" help="Affichée aux utilisateurs sur l’écran d’autorisation.">
               <UTextarea v-model="form.description" class="w-full" :rows="2" />
             </UFormField>
+            <div class="grid gap-3 sm:grid-cols-2">
+              <UFormField label="Adresse de l’application" help="Dans la suite : affichée dans le sélecteur d’applications.">
+                <UInput v-model="form.homeUrl" class="w-full" placeholder="https://print.exemple.com" />
+              </UFormField>
+              <UFormField label="Icône" help="Ex. i-lucide-printer">
+                <UInput v-model="form.icon" class="w-full font-mono" :leading-icon="form.icon || undefined" placeholder="i-lucide-app-window" />
+              </UFormField>
+            </div>
             <UFormField label="URL de retour (redirect URI)" required hint="ex. https://mailer.exemple.com/auth/callback">
               <UInputTags v-model="form.redirectUris" add-on-blur add-on-paste class="w-full" data-testid="redirect-uris" />
             </UFormField>

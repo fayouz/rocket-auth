@@ -6,7 +6,7 @@ use ApiPlatform\Doctrine\Orm\Extension\QueryCollectionExtensionInterface;
 use ApiPlatform\Doctrine\Orm\Util\QueryNameGeneratorInterface;
 use ApiPlatform\Metadata\Operation;
 use App\Entity\Consent;
-use App\Security\ActorContext;
+use Rocket\Core\Security\ActorContext;
 use Doctrine\ORM\QueryBuilder;
 
 /** Everyone, administrators included, only lists their own consents. */

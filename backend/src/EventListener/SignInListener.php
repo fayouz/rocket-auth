@@ -3,7 +3,7 @@
 namespace App\EventListener;
 
 use App\Entity\SignInEvent;
-use App\Entity\User;
+use Rocket\Core\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\AuthenticationSuccessEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Events;

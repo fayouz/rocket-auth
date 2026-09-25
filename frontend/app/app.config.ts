@@ -10,8 +10,9 @@ export default defineAppConfig({
     },
   },
   rocket: {
+    id: 'auth',
     name: 'Rocket Auth',
-    icon: 'i-lucide-rocket',
+    icon: 'i-lucide-shield-check',
     // Login page subtitle.
     tagline: 'Un seul compte pour toutes les applications de l’entreprise.',
     // Main menu: the domain pages ("label" entries start a group).

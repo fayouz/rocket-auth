@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Rocket\Core\Entity\User;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\GetCollection;

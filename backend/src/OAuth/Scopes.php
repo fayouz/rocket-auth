@@ -2,7 +2,7 @@
 
 namespace App\OAuth;
 
-use App\Entity\User;
+use Rocket\Core\Entity\User;
 
 /** The scopes Rocket Auth understands, their description (consent screen) and the claims they release. */
 final class Scopes

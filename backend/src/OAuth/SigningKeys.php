@@ -2,7 +2,7 @@
 
 namespace App\OAuth;
 
-use App\Oidc\Jwt;
+use Rocket\Core\Oidc\Jwt;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Filesystem\Filesystem;
 

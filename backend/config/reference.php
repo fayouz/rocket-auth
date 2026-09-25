@@ -1887,6 +1887,11 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     enable_static_query_cache?: bool|Param, // Default: true
  *     connection_keys?: list<mixed>,
  * }
+ * @psalm-type RocketCoreConfig = array{
+ *     app_name?: scalar|Param|null, // Name of the application, e.g. "Rocket Print". // Default: "Rocket"
+ *     app_id?: scalar|Param|null, // Identifier of the application in the suite, e.g. "print". // Default: "rocket"
+ *     token_prefix?: scalar|Param|null, // Prefix of the application tokens, e.g. "rpa_" for Rocket Print. // Default: "rka_"
+ * }
  * @psalm-type ConfigType = array{
  *     imports?: ImportsConfig,
  *     parameters?: ParametersConfig,
@@ -1901,6 +1906,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     lexik_jwt_authentication?: LexikJwtAuthenticationConfig,
  *     monolog?: MonologConfig,
  *     stof_doctrine_extensions?: StofDoctrineExtensionsConfig,
+ *     rocket_core?: RocketCoreConfig,
  *     "when@dev"?: array{
  *         imports?: ImportsConfig,
  *         parameters?: ParametersConfig,
@@ -1916,6 +1922,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         monolog?: MonologConfig,
  *         maker?: MakerConfig,
  *         stof_doctrine_extensions?: StofDoctrineExtensionsConfig,
+ *         rocket_core?: RocketCoreConfig,
  *     },
  *     "when@prod"?: array{
  *         imports?: ImportsConfig,
@@ -1931,6 +1938,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         lexik_jwt_authentication?: LexikJwtAuthenticationConfig,
  *         monolog?: MonologConfig,
  *         stof_doctrine_extensions?: StofDoctrineExtensionsConfig,
+ *         rocket_core?: RocketCoreConfig,
  *     },
  *     "when@test"?: array{
  *         imports?: ImportsConfig,
@@ -1947,6 +1955,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         monolog?: MonologConfig,
  *         stof_doctrine_extensions?: StofDoctrineExtensionsConfig,
  *         dama_doctrine_test?: DamaDoctrineTestConfig,
+ *         rocket_core?: RocketCoreConfig,
  *     },
  *     ...<string, ExtensionType|array{ // extra keys must follow the when@%env% pattern or match an extension alias
  *         imports?: ImportsConfig,

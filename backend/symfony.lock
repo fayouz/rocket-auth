@@ -91,6 +91,9 @@
             "bin/phpunit"
         ]
     },
+    "rocket/core-bundle": {
+        "version": "dev-claude/practical-cray-rz3j2q"
+    },
     "stof/doctrine-extensions-bundle": {
         "version": "v1.15.3"
     },

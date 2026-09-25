@@ -2,8 +2,8 @@
 
 namespace App\Tests;
 
-use App\Entity\Application;
-use App\Entity\User;
+use Rocket\Core\Entity\Application;
+use Rocket\Core\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;

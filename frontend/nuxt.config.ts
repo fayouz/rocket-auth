@@ -1,32 +1,22 @@
+import { fileURLToPath } from 'node:url'
+
 export default defineNuxtConfig({
+  // The Rocket core layer (npm "@rocket/core", from GitHub): layout, dashboard, accounts, applications, updates…
+  // ROCKET_CORE_LAYER: a local checkout of rocket-core/nuxt, to work on both at once.
+  extends: [process.env.ROCKET_CORE_LAYER || fileURLToPath(new URL('./node_modules/@rocket/core/nuxt', import.meta.url))],
   compatibilityDate: '2026-09-01',
-  modules: ['@nuxt/ui', '@nuxt/eslint'],
-  // Back-office app: auth lives client-side.
-  ssr: false,
-  css: ['~/assets/css/main.css'],
-  // No third-party font CDNs: system fonts only.
-  ui: { fonts: false },
-  devtools: { enabled: false },
+  modules: ['@nuxt/eslint'],
   app: {
     head: {
       title: 'Rocket Auth',
-      htmlAttrs: { lang: 'fr' },
     },
   },
   runtimeConfig: {
-    // Server-to-server URL of the API (e.g. http://api:80 inside Docker); falls back to the public one.
-    apiInternalBase: '',
     public: {
-      apiBase: 'http://localhost:8000',
+      apiBase: 'http://localhost:8100',
       // Dashboard shortcuts.
       docsUrl: 'https://github.com/fayouz/rocket-auth/tree/develop/docs/content',
       changelogUrl: 'https://github.com/fayouz/rocket-auth/blob/develop/CHANGELOG.md',
-      // Version of the interface: NUXT_PUBLIC_APP_VERSION, at build time (deploy/update.sh) or at runtime (Docker image).
-      appVersion: process.env.NUXT_PUBLIC_APP_VERSION || 'dev',
     },
-  },
-  icon: {
-    serverBundle: { collections: ['lucide'] },
-    clientBundle: { scan: true },
   },
 })

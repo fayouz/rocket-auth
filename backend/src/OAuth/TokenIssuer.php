@@ -4,8 +4,8 @@ namespace App\OAuth;
 
 use App\Entity\OAuthClient;
 use App\Entity\RefreshToken;
-use App\Entity\User;
-use App\Oidc\Jwt;
+use Rocket\Core\Entity\User;
+use Rocket\Core\Oidc\Jwt;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Clock\ClockInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -93,7 +93,7 @@ class TokenIssuer
     {
         try {
             $claims = Jwt::verify($token, [$this->keys->publicJwk()]);
-        } catch (\App\Oidc\OidcException) {
+        } catch (\Rocket\Core\Oidc\OidcException) {
             throw new OAuthException('invalid_token', 'The access token is invalid.', 401);
         }
         if (($claims['iss'] ?? null) !== $this->issuer() || 'access' !== ($claims['token_use'] ?? null)) {

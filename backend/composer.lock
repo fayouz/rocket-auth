@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8200bae4480672d495df98e27d7b8188",
+    "content-hash": "a288e896199d6cfbdccc158d5d9066a9",
     "packages": [
         {
             "name": "api-platform/doctrine-common",
@@ -3474,6 +3474,83 @@
             "time": "2024-09-11T13:17:53+00:00"
         },
         {
+            "name": "rocket/core-bundle",
+            "version": "dev-claude/practical-cray-rz3j2q",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fayouz/rocket-core.git",
+                "reference": "79b976b54797bb068bcb1d5c1eba36de5335c246"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fayouz/rocket-core/zipball/79b976b54797bb068bcb1d5c1eba36de5335c246",
+                "reference": "79b976b54797bb068bcb1d5c1eba36de5335c246",
+                "shasum": ""
+            },
+            "require": {
+                "api-platform/doctrine-orm": "^5.0",
+                "api-platform/symfony": "^5.0",
+                "doctrine/doctrine-bundle": "^3.3",
+                "doctrine/doctrine-migrations-bundle": "^4.0",
+                "doctrine/orm": "^3.7",
+                "ext-sodium": "*",
+                "lexik/jwt-authentication-bundle": "^3.2",
+                "php": ">=8.4",
+                "stof/doctrine-extensions-bundle": "^1.15",
+                "symfony/console": "8.1.*",
+                "symfony/doctrine-messenger": "8.1.*",
+                "symfony/expression-language": "8.1.*",
+                "symfony/framework-bundle": "8.1.*",
+                "symfony/http-client": "8.1.*",
+                "symfony/ldap": "8.1.*",
+                "symfony/lock": "8.1.*",
+                "symfony/messenger": "8.1.*",
+                "symfony/mime": "8.1.*",
+                "symfony/process": "8.1.*",
+                "symfony/scheduler": "8.1.*",
+                "symfony/security-bundle": "8.1.*",
+                "symfony/serializer": "8.1.*",
+                "symfony/uid": "8.1.*",
+                "symfony/validator": "8.1.*"
+            },
+            "require-dev": {
+                "dama/doctrine-test-bundle": "^8.6",
+                "nelmio/cors-bundle": "^2.6",
+                "phpdocumentor/reflection-docblock": "^6.0",
+                "phpstan/phpdoc-parser": "^2.3",
+                "phpunit/phpunit": "^13.3",
+                "symfony/asset": "8.1.*",
+                "symfony/browser-kit": "8.1.*",
+                "symfony/css-selector": "8.1.*",
+                "symfony/dotenv": "8.1.*",
+                "symfony/monolog-bundle": "^4.1",
+                "symfony/property-access": "8.1.*",
+                "symfony/property-info": "8.1.*",
+                "symfony/twig-bundle": "8.1.*",
+                "symfony/yaml": "8.1.*"
+            },
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-4": {
+                    "Rocket\\Core\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Rocket\\Core\\Tests\\": "tests/"
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "description": "The platform shared by the Rocket applications: accounts (local, LDAP, OpenID Connect), external applications and impersonation, dashboard, health checks, updates, standalone and suite modes.",
+            "support": {
+                "source": "https://github.com/fayouz/rocket-core/tree/claude/practical-cray-rz3j2q",
+                "issues": "https://github.com/fayouz/rocket-core/issues"
+            },
+            "time": "2026-09-25T23:16:47+00:00"
+        },
+        {
             "name": "stof/doctrine-extensions-bundle",
             "version": "v1.15.3",
             "source": {
@@ -5761,6 +5838,92 @@
             "time": "2026-09-14T17:47:24+00:00"
         },
         {
+            "name": "symfony/mime",
+            "version": "v8.1.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/mime.git",
+                "reference": "773ac57f20e2795bdadb65b5b1b5f4850d498283"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/mime/zipball/773ac57f20e2795bdadb65b5b1b5f4850d498283",
+                "reference": "773ac57f20e2795bdadb65b5b1b5f4850d498283",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.4.1",
+                "symfony/polyfill-intl-idn": "^1.10",
+                "symfony/polyfill-mbstring": "^1.0"
+            },
+            "conflict": {
+                "egulias/email-validator": "~3.0.0",
+                "phpdocumentor/reflection-docblock": "<5.2|>=7",
+                "phpdocumentor/type-resolver": "<1.5.1"
+            },
+            "require-dev": {
+                "egulias/email-validator": "^2.1.10|^3.1|^4",
+                "league/html-to-markdown": "^5.0",
+                "phpdocumentor/reflection-docblock": "^5.2|^6.0",
+                "symfony/dependency-injection": "^7.4|^8.0",
+                "symfony/process": "^7.4|^8.0",
+                "symfony/property-access": "^7.4|^8.0",
+                "symfony/property-info": "^7.4|^8.0",
+                "symfony/serializer": "^7.4.17|^8.1.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Mime\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Allows manipulating MIME messages",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "mime",
+                "mime-type"
+            ],
+            "support": {
+                "source": "https://github.com/symfony/mime/tree/v8.1.7"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/nicolas-grekas",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2026-09-04T11:02:17+00:00"
+        },
+        {
             "name": "symfony/monolog-bridge",
             "version": "v8.1.6",
             "source": {
@@ -6229,6 +6392,93 @@
                 }
             ],
             "time": "2026-07-28T08:25:59+00:00"
+        },
+        {
+            "name": "symfony/polyfill-intl-idn",
+            "version": "v1.42.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/polyfill-intl-idn.git",
+                "reference": "51b5ff5ba85452b31ec6f55490b08148612339d9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/polyfill-intl-idn/zipball/51b5ff5ba85452b31ec6f55490b08148612339d9",
+                "reference": "51b5ff5ba85452b31ec6f55490b08148612339d9",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2",
+                "symfony/polyfill-intl-normalizer": "^1.10"
+            },
+            "suggest": {
+                "ext-intl": "For best performance"
+            },
+            "type": "library",
+            "extra": {
+                "thanks": {
+                    "url": "https://github.com/symfony/polyfill",
+                    "name": "symfony/polyfill"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "bootstrap.php"
+                ],
+                "psr-4": {
+                    "Symfony\\Polyfill\\Intl\\Idn\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Laurent Bassin",
+                    "email": "laurent@bassin.info"
+                },
+                {
+                    "name": "Trevor Rowbotham",
+                    "email": "trevor.rowbotham@pm.me"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony polyfill for intl's idn_to_ascii and idn_to_utf8 functions",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "compatibility",
+                "idn",
+                "intl",
+                "polyfill",
+                "portable",
+                "shim"
+            ],
+            "support": {
+                "source": "https://github.com/symfony/polyfill-intl-idn/tree/v1.42.0"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/nicolas-grekas",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2026-08-24T10:51:20+00:00"
         },
         {
             "name": "symfony/polyfill-intl-normalizer",
@@ -11177,14 +11427,16 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "rocket/core-bundle": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=8.4",
         "ext-ctype": "*",
-        "ext-iconv": "*"
+        "ext-iconv": "*",
+        "php": ">=8.4"
     },
-    "platform-dev": [],
+    "platform-dev": {},
     "plugin-api-version": "2.6.0"
 }

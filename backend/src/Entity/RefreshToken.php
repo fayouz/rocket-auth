@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Rocket\Core\Entity\User;
 use App\Repository\RefreshTokenRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;

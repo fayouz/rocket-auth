@@ -3,8 +3,8 @@
 namespace App\Tests\Functional;
 
 use App\Entity\OAuthClient;
-use App\Entity\User;
-use App\Oidc\Jwt;
+use Rocket\Core\Entity\User;
+use Rocket\Core\Oidc\Jwt;
 use App\Tests\ApiTestTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 

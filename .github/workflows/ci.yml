@@ -33,6 +33,8 @@ jobs:
     env:
       APP_ENV: test
       DATABASE_URL: postgresql://app:app@127.0.0.1:5432/app?serverVersion=16&charset=utf8
+      # rocket/core-bundle comes from GitHub: authenticated downloads are not rate-limited.
+      COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{ secrets.GITHUB_TOKEN }}"}}'
     steps:
       - uses: actions/checkout@v4
       - uses: shivammathur/setup-php@v2
@@ -176,8 +178,9 @@ jobs:
         run: |
           $COMPOSE up -d --build
           test "$(docker wait "$($COMPOSE ps -aq demo-seed)")" = 0
-          for i in $(seq 1 60); do curl -fsS $FRONT/login -o /dev/null && exit 0; sleep 2; done
-          echo "Front never became ready" && exit 1
+          # Ready when the front answers and its /api proxy reaches the API (which starts after the front's container).
+          for i in $(seq 1 60); do curl -fsS $FRONT/login -o /dev/null && curl -fsS $FRONT/api/setup -o /dev/null && exit 0; sleep 2; done
+          echo "Front or API never became ready" && exit 1
       - name: Check demo scenarios
         run: |
           set -x

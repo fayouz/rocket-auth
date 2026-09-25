@@ -11,9 +11,7 @@ framework:
             failed: 'doctrine://default?queue_name=failed'
             sync: 'sync://'
 
-        routing:
-            # Messages implementing it are handled by the worker (messenger:consume async).
-            App\Message\AsyncMessageInterface: async
+        # Rocket\Core\Message\AsyncMessageInterface messages go to "async" (routing set by the RocketCoreBundle).
 
 when@test:
     framework:

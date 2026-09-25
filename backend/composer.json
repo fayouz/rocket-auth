@@ -7,8 +7,6 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "php": ">=8.4",
-        "phpdocumentor/reflection-docblock": "^6.0",
-        "phpstan/phpdoc-parser": "^2.3",
         "api-platform/doctrine-orm": "^5.0",
         "api-platform/symfony": "^5.0",
         "doctrine/doctrine-bundle": "^3.3",
@@ -16,6 +14,9 @@
         "doctrine/orm": "^3.7",
         "lexik/jwt-authentication-bundle": "^3.2",
         "nelmio/cors-bundle": "^2.6",
+        "phpdocumentor/reflection-docblock": "^6.0",
+        "phpstan/phpdoc-parser": "^2.3",
+        "rocket/core-bundle": "dev-claude/practical-cray-rz3j2q",
         "stof/doctrine-extensions-bundle": "^1.15",
         "symfony/asset": "8.1.*",
         "symfony/console": "8.1.*",
@@ -99,5 +100,11 @@
         "symfony/browser-kit": "8.1.*",
         "symfony/css-selector": "8.1.*",
         "symfony/maker-bundle": "^1.68"
-    }
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/fayouz/rocket-core"
+        }
+    ]
 }

@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\OAuthClient;
-use App\Security\Roles;
+use Rocket\Core\Security\Roles;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
