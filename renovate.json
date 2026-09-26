@@ -1,0 +1,17 @@
+{
+  "$schema": "https://docs.renovatejs.org/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "description": "Only rocket-core is updated automatically: one pull request for the bundle, the Nuxt layer and the reusable CI workflows.",
+  "enabledManagers": ["composer", "npm", "github-actions"],
+  "packageRules": [
+    {
+      "matchPackageNames": ["*", "!rocket/core-bundle", "!@rocket/core", "!fayouz/rocket-core"],
+      "enabled": false
+    },
+    {
+      "matchPackageNames": ["rocket/core-bundle", "@rocket/core", "fayouz/rocket-core"],
+      "groupName": "rocket-core",
+      "rangeStrategy": "bump"
+    }
+  ]
+}

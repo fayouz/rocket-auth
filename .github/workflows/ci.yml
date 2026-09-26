@@ -14,19 +14,19 @@ permissions:
   contents: read
 
 # The jobs are the reusable workflows of rocket-core, shared by every brick.
-# The ref will become a version tag of rocket-core (e.g. @v1) once it is tagged.
+# Reusable workflows of rocket-core, pinned to a version tag (updated by Renovate with the bundle and the layer).
 jobs:
   backend:
     name: Backend (PHP)
-    uses: fayouz/rocket-core/.github/workflows/brick-backend.yml@claude/practical-cray-rz3j2q
+    uses: fayouz/rocket-core/.github/workflows/brick-backend.yml@v0.1.0
 
   frontend:
     name: Frontend (Nuxt)
-    uses: fayouz/rocket-core/.github/workflows/brick-frontend.yml@claude/practical-cray-rz3j2q
+    uses: fayouz/rocket-core/.github/workflows/brick-frontend.yml@v0.1.0
 
   docs:
     name: Docs (Nuxt Content)
-    uses: fayouz/rocket-core/.github/workflows/brick-frontend.yml@claude/practical-cray-rz3j2q
+    uses: fayouz/rocket-core/.github/workflows/brick-frontend.yml@v0.1.0
     with:
       working-directory: docs
       build-script: generate
@@ -38,12 +38,12 @@ jobs:
     permissions:
       contents: read
       packages: write
-    uses: fayouz/rocket-core/.github/workflows/brick-images.yml@claude/practical-cray-rz3j2q
+    uses: fayouz/rocket-core/.github/workflows/brick-images.yml@v0.1.0
 
   demo:
     name: Demo environment (compose)
     needs: [backend, frontend]
-    uses: fayouz/rocket-core/.github/workflows/brick-demo.yml@claude/practical-cray-rz3j2q
+    uses: fayouz/rocket-core/.github/workflows/brick-demo.yml@v0.1.0
     with:
       front-url: http://localhost:3100
       docs-url: http://localhost:3101
