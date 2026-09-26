@@ -18,15 +18,15 @@ permissions:
 jobs:
   backend:
     name: Backend (PHP)
-    uses: fayouz/rocket-core/.github/workflows/brick-backend.yml@v0.1.0
+    uses: fayouz/rocket-core/.github/workflows/brick-backend.yml@v0.2.1
 
   frontend:
     name: Frontend (Nuxt)
-    uses: fayouz/rocket-core/.github/workflows/brick-frontend.yml@v0.1.0
+    uses: fayouz/rocket-core/.github/workflows/brick-frontend.yml@v0.2.1
 
   docs:
     name: Docs (Nuxt Content)
-    uses: fayouz/rocket-core/.github/workflows/brick-frontend.yml@v0.1.0
+    uses: fayouz/rocket-core/.github/workflows/brick-frontend.yml@v0.2.1
     with:
       working-directory: docs
       build-script: generate
@@ -38,12 +38,12 @@ jobs:
     permissions:
       contents: read
       packages: write
-    uses: fayouz/rocket-core/.github/workflows/brick-images.yml@v0.1.0
+    uses: fayouz/rocket-core/.github/workflows/brick-images.yml@v0.2.1
 
   demo:
     name: Demo environment (compose)
     needs: [backend, frontend]
-    uses: fayouz/rocket-core/.github/workflows/brick-demo.yml@v0.1.0
+    uses: fayouz/rocket-core/.github/workflows/brick-demo.yml@v0.2.1
     with:
       front-url: http://localhost:3100
       docs-url: http://localhost:3101
