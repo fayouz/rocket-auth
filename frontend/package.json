@@ -1,0 +1,26 @@
+{
+  "name": "rocket-auth-front",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "nuxt dev",
+    "build": "nuxt build",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "typecheck": "nuxt typecheck",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@nuxt/ui": "^4.11.2",
+    "@rocket/core": "github:fayouz/rocket-core#semver:^0.1.0",
+    "nuxt": "^4.5.2",
+    "tailwindcss": "^4.3.3"
+  },
+  "devDependencies": {
+    "@iconify-json/lucide": "^1.2.136",
+    "@nuxt/eslint": "^1.17.0",
+    "eslint": "^10.11.0",
+    "typescript": "^6.0.3",
+    "vue-tsc": "^3.3.11"
+  }
+}

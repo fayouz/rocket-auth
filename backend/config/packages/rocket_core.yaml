@@ -1,0 +1,4 @@
+rocket_core:
+    app_name: Rocket Auth
+    app_id: auth
+    token_prefix: raa_
