@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ee2e2864a06d507d2fa592ade265a8b7",
+    "content-hash": "7e424dfae91ec6021bd12ca7defae6a6",
     "packages": [
         {
             "name": "api-platform/doctrine-common",
@@ -3475,16 +3475,16 @@
         },
         {
             "name": "rocket/core-bundle",
-            "version": "v0.1.0",
+            "version": "v0.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fayouz/rocket-core.git",
-                "reference": "f7b21dd1a3cccc228ea4a37855a14f777242dc76"
+                "reference": "d56a0533d0ed6856dcd8e0cedcf206b77eedc995"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fayouz/rocket-core/zipball/f7b21dd1a3cccc228ea4a37855a14f777242dc76",
-                "reference": "f7b21dd1a3cccc228ea4a37855a14f777242dc76",
+                "url": "https://api.github.com/repos/fayouz/rocket-core/zipball/d56a0533d0ed6856dcd8e0cedcf206b77eedc995",
+                "reference": "d56a0533d0ed6856dcd8e0cedcf206b77eedc995",
                 "shasum": ""
             },
             "require": {
@@ -3545,10 +3545,10 @@
             ],
             "description": "The platform shared by the Rocket applications: accounts (local, LDAP, OpenID Connect), external applications and impersonation, dashboard, health checks, updates, standalone and suite modes.",
             "support": {
-                "source": "https://github.com/fayouz/rocket-core/tree/v0.1.0",
+                "source": "https://github.com/fayouz/rocket-core/tree/v0.2.1",
                 "issues": "https://github.com/fayouz/rocket-core/issues"
             },
-            "time": "2026-09-26T00:33:00+00:00"
+            "time": "2026-09-26T01:28:22+00:00"
         },
         {
             "name": "stof/doctrine-extensions-bundle",
@@ -11436,5 +11436,5 @@
         "php": ">=8.4"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }
