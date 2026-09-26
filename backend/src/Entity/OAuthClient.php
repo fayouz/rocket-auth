@@ -119,6 +119,15 @@ class OAuthClient
     #[Groups(['oauth_client:read', 'oauth_client:write'])]
     private ?string $icon = null;
 
+    /**
+     * OpenID Connect Back-Channel Logout: where the application receives the logout tokens (sign-out, account disabled
+     * or deleted). The bricks of the suite declare it themselves (POST /oauth/suite/register).
+     */
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Length(max: 255)]
+    #[Groups(['oauth_client:read', 'oauth_client:write'])]
+    private ?string $backchannelLogoutUri = null;
+
     /** First-party application: users are not asked for their consent. */
     #[ORM\Column]
     #[Groups(['oauth_client:read', 'oauth_client:write'])]
@@ -142,11 +151,11 @@ class OAuthClient
     #[Assert\Callback]
     public function validate(ExecutionContextInterface $context): void
     {
-        foreach (['redirectUris' => $this->redirectUris, 'postLogoutRedirectUris' => $this->postLogoutRedirectUris] as $path => $uris) {
+        foreach (['redirectUris' => $this->redirectUris, 'postLogoutRedirectUris' => $this->postLogoutRedirectUris, 'backchannelLogoutUri' => array_filter([$this->backchannelLogoutUri])] as $path => $uris) {
             foreach ($uris as $i => $uri) {
                 $parts = parse_url($uri);
                 if (false === $parts || !\in_array($parts['scheme'] ?? '', ['http', 'https'], true) || !isset($parts['host']) || isset($parts['fragment'])) {
-                    $context->buildViolation('Each URI must be an absolute http(s) URL without fragment.')->atPath(\sprintf('%s[%d]', $path, $i))->addViolation();
+                    $context->buildViolation('Each URI must be an absolute http(s) URL without fragment.')->atPath('backchannelLogoutUri' === $path ? $path : \sprintf('%s[%d]', $path, $i))->addViolation();
                 }
             }
         }
@@ -384,5 +393,25 @@ class OAuthClient
         $this->icon = '' === trim((string) $icon) ? null : trim((string) $icon);
 
         return $this;
+    }
+
+    public function getBackchannelLogoutUri(): ?string
+    {
+        return $this->backchannelLogoutUri;
+    }
+
+    public function setBackchannelLogoutUri(?string $backchannelLogoutUri): static
+    {
+        $this->backchannelLogoutUri = '' === trim((string) $backchannelLogoutUri) ? null : trim((string) $backchannelLogoutUri);
+
+        return $this;
+    }
+
+    /** An absolute http(s) URL without fragment (redirect, post-logout and back-channel logout URIs). */
+    public static function isValidUri(string $uri): bool
+    {
+        $parts = parse_url($uri);
+
+        return false !== $parts && \in_array($parts['scheme'] ?? '', ['http', 'https'], true) && isset($parts['host']) && !isset($parts['fragment']);
     }
 }

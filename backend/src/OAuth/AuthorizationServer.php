@@ -111,7 +111,7 @@ class AuthorizationServer
     }
 
     /** The user said yes (or had already): records the consent and returns the redirect with a one-time code. */
-    public function approve(AuthorizationRequest $request, User $user, \DateTimeImmutable $authTime): string
+    public function approve(AuthorizationRequest $request, User $user, \DateTimeImmutable $authTime, ?string $sid = null): string
     {
         $now = $this->clock->now();
         if (!$request->client->isTrusted()) {
@@ -137,6 +137,7 @@ class AuthorizationServer
             $request->codeChallenge,
             $authTime,
             $now->modify(\sprintf('+%d seconds', self::CODE_TTL)),
+            $sid,
         ));
         $this->em->persist(new SignInEvent(SignInEvent::AUTHORIZE, $user, $request->client, $now));
         $this->em->flush();
@@ -193,6 +194,29 @@ class AuthorizationServer
             $refresh->revoke($this->clock->now());
             $this->em->flush();
         }
+    }
+
+    /**
+     * A brick of the suite declares its own endpoints (POST /oauth/suite/register), authenticated as a confidential client.
+     *
+     * @param array<string, mixed> $body
+     */
+    public function register(array $body, ?string $basicUser, ?string $basicPassword): OAuthClient
+    {
+        $client = $this->authenticateClient($body, $basicUser, $basicPassword);
+        if (!$client->isConfidential()) {
+            throw new OAuthException('invalid_client', 'Only confidential clients can declare their endpoints.', 401);
+        }
+        if (\array_key_exists('backchannel_logout_uri', $body)) {
+            $uri = \is_string($body['backchannel_logout_uri']) ? trim($body['backchannel_logout_uri']) : '';
+            if ('' !== $uri && !OAuthClient::isValidUri($uri)) {
+                throw new OAuthException('invalid_client_metadata', 'backchannel_logout_uri must be an absolute http(s) URL without fragment.');
+            }
+            $client->setBackchannelLogoutUri($uri);
+        }
+        $this->em->flush();
+
+        return $client;
     }
 
     /** Revokes every refresh token of a user for a client (consent withdrawn, reuse detected). */
@@ -258,7 +282,7 @@ class AuthorizationServer
             throw new OAuthException('invalid_grant', 'This account is disabled.');
         }
 
-        return $this->tokens->forUser($client, $user, $code->getScopes(), $code->getAuthTime(), $code->getNonce());
+        return $this->tokens->forUser($client, $user, $code->getScopes(), $code->getAuthTime(), $code->getNonce(), sid: $code->getSid());
     }
 
     /**
@@ -297,7 +321,7 @@ class AuthorizationServer
         }
         $token->revoke($now);
 
-        return $this->tokens->forUser($client, $user, $scopes, $token->getAuthTime());
+        return $this->tokens->forUser($client, $user, $scopes, $token->getAuthTime(), sid: $token->getSid());
     }
 
     /**
@@ -310,6 +334,18 @@ class AuthorizationServer
         $scopes = Scopes::parse(\is_string($body['scope'] ?? null) ? $body['scope'] : '');
         // User scopes make no sense without a user.
         $scopes = array_values(array_diff($scopes, ['openid', 'profile', 'email', 'groups', 'offline_access']));
+
+        // The application to call: "audience" = its client ID (e.g. rocket-mailer). Only an enabled client of this
+        // provider: the called application checks that the token is meant for it (aud) and decides who may call it.
+        $audience = $body['audience'] ?? null;
+        if (null !== $audience && '' !== $audience) {
+            $target = \is_string($audience) ? $this->clients->findOneBy(['clientId' => $audience]) : null;
+            if (null === $target || !$target->isEnabled()) {
+                throw new OAuthException('invalid_target', 'The audience must be the client ID of an enabled application.');
+            }
+
+            return $this->tokens->forClient($client, $scopes, $target->getClientId());
+        }
 
         return $this->tokens->forClient($client, $scopes);
     }

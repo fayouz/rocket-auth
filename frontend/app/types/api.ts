@@ -21,6 +21,8 @@ export interface OAuthClient extends Tracked {
   confidential: boolean
   redirectUris: string[]
   postLogoutRedirectUris: string[]
+  /** OpenID Connect Back-Channel Logout: where the application receives the logout tokens. */
+  backchannelLogoutUri: string | null
   allowedScopes: OAuthScope[]
   grantTypes: OAuthGrant[]
   trusted: boolean

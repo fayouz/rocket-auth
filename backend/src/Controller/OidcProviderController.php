@@ -53,6 +53,9 @@ final class OidcProviderController extends AbstractController
             'claims_supported' => ['sub', 'iss', 'aud', 'exp', 'iat', 'auth_time', 'nonce', 'name', 'given_name', 'family_name', 'preferred_username', 'updated_at', 'email', 'email_verified', 'groups'],
             'prompt_values_supported' => ['none', 'login', 'consent', 'select_account'],
             'authorization_response_iss_parameter_supported' => true,
+            // OpenID Connect Back-Channel Logout 1.0: logout tokens with "sid" when the sign-in happened in a known session.
+            'backchannel_logout_supported' => true,
+            'backchannel_logout_session_supported' => true,
         ]));
     }
 
@@ -103,6 +106,27 @@ final class OidcProviderController extends AbstractController
         }
 
         return $this->cors(new JsonResponse([]));
+    }
+
+    /**
+     * A brick of the suite declares its back-channel logout endpoint (rocket-core, SuiteProvisioner), authenticated as
+     * its confidential client (client_secret_basic or client_secret_post). Not OAuth dynamic registration: only the
+     * application's own endpoints, the rest stays with the administrators.
+     */
+    #[Route('/oauth/suite/register', name: 'oidc_suite_register', methods: ['POST'])]
+    public function register(Request $request, AuthorizationServer $server): JsonResponse
+    {
+        try {
+            $client = $server->register($request->request->all(), $request->getUser(), $request->getPassword());
+        } catch (OAuthException $e) {
+            return $this->error($e);
+        }
+
+        return new JsonResponse([
+            'client_id' => $client->getClientId(),
+            'backchannel_logout_uri' => $client->getBackchannelLogoutUri(),
+            'grant_types' => $client->getGrantTypes(),
+        ], headers: ['Cache-Control' => 'no-store']);
     }
 
     #[Route('/oauth/userinfo', name: 'oidc_userinfo', methods: ['GET', 'POST', 'OPTIONS'])]

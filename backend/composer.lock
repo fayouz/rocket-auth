@@ -3479,12 +3479,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fayouz/rocket-core.git",
-                "reference": "64a41d032e9551e6294341b84a290ac87557e2e8"
+                "reference": "0aaf388f68b5d97bdb14bcfa2cb1bb12975bdfe5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fayouz/rocket-core/zipball/64a41d032e9551e6294341b84a290ac87557e2e8",
-                "reference": "64a41d032e9551e6294341b84a290ac87557e2e8",
+                "url": "https://api.github.com/repos/fayouz/rocket-core/zipball/0aaf388f68b5d97bdb14bcfa2cb1bb12975bdfe5",
+                "reference": "0aaf388f68b5d97bdb14bcfa2cb1bb12975bdfe5",
                 "shasum": ""
             },
             "require": {
@@ -3548,7 +3548,7 @@
                 "source": "https://github.com/fayouz/rocket-core/tree/claude/practical-cray-rz3j2q",
                 "issues": "https://github.com/fayouz/rocket-core/issues"
             },
-            "time": "2026-09-25T23:40:12+00:00"
+            "time": "2026-09-26T00:12:57+00:00"
         },
         {
             "name": "stof/doctrine-extensions-bundle",

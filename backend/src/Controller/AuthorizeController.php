@@ -71,18 +71,22 @@ final class AuthorizeController extends AbstractController
             return $this->json(['redirectUrl' => $this->server->deny($authorization, $user)]);
         }
 
-        // auth_time: when the Rocket Auth session started.
+        // auth_time: when the Rocket Auth session started; sid: that session (see SessionIdListener).
         $authTime = $this->clock->now();
+        $sid = null;
         try {
             $token = $security->getToken();
             $claims = null === $token ? null : $jwt->decode($token);
             if (\is_array($claims) && \is_int($claims['iat'] ?? null)) {
                 $authTime = (new \DateTimeImmutable())->setTimestamp($claims['iat']);
             }
+            if (\is_array($claims) && \is_string($claims['sid'] ?? null) && '' !== $claims['sid']) {
+                $sid = $claims['sid'];
+            }
         } catch (\Throwable) {
         }
 
-        return $this->json(['redirectUrl' => $this->server->approve($authorization, $user, $authTime)]);
+        return $this->json(['redirectUrl' => $this->server->approve($authorization, $user, $authTime, $sid)]);
     }
 
     /** Public: sends the browser back with an error (not signed in with prompt=none, sign-in cancelled…). */

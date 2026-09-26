@@ -29,7 +29,7 @@ const SCOPES: { value: OAuthScope, label: string }[] = [
 const GRANTS: { value: OAuthGrant, label: string }[] = [
   { value: 'authorization_code', label: 'Code d’autorisation (connexion des utilisateurs)' },
   { value: 'refresh_token', label: 'Jeton de rafraîchissement' },
-  { value: 'client_credentials', label: 'Identifiants client (application seule, sans utilisateur)' },
+  { value: 'client_credentials', label: 'Identifiants client (l’application seule, sans utilisateur : appels vers les autres briques de la suite)' },
 ]
 
 async function patch(client: OAuthClient, body: Partial<OAuthClient>) {
@@ -87,6 +87,7 @@ const EMPTY = {
   trusted: false,
   redirectUris: [] as string[],
   postLogoutRedirectUris: [] as string[],
+  backchannelLogoutUri: '',
   allowedScopes: ['openid', 'email', 'profile', 'groups'] as OAuthScope[],
   grantTypes: ['authorization_code', 'refresh_token'] as OAuthGrant[],
 }
@@ -115,6 +116,7 @@ function edit(client: OAuthClient) {
     trusted: client.trusted,
     redirectUris: [...client.redirectUris],
     postLogoutRedirectUris: [...client.postLogoutRedirectUris],
+    backchannelLogoutUri: client.backchannelLogoutUri ?? '',
     allowedScopes: [...client.allowedScopes],
     grantTypes: [...client.grantTypes],
   })
@@ -124,7 +126,7 @@ function edit(client: OAuthClient) {
 const revealed = ref<{ client: OAuthClient, secret: string | null } | null>(null)
 
 async function submit() {
-  const body = { ...form, description: form.description || null, homeUrl: form.homeUrl || null, icon: form.icon || null }
+  const body = { ...form, description: form.description || null, homeUrl: form.homeUrl || null, icon: form.icon || null, backchannelLogoutUri: form.backchannelLogoutUri.trim() || null }
   if (editing.value) {
     const { clientId: _clientId, confidential: _confidential, ...changes } = body
     if (await patch(editing.value, changes)) formOpen.value = false
@@ -232,6 +234,13 @@ async function copy(text: string) {
             </UFormField>
             <UFormField label="URL après déconnexion (optionnel)" hint="post_logout_redirect_uri">
               <UInputTags v-model="form.postLogoutRedirectUris" add-on-blur add-on-paste class="w-full" />
+            </UFormField>
+            <UFormField
+              label="URL de déconnexion back-channel (optionnel)"
+              hint="backchannel_logout_uri"
+              help="Rocket Auth y envoie un jeton de déconnexion quand l’utilisateur se déconnecte, ou que son compte est désactivé ou supprimé. Les briques de la suite la déclarent elles-mêmes."
+            >
+              <UInput v-model="form.backchannelLogoutUri" class="w-full" placeholder="https://print.exemple.com/api/auth/oidc/backchannel-logout" />
             </UFormField>
             <div class="grid gap-3 sm:grid-cols-2">
               <UFormField label="Scopes autorisés">

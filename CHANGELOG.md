@@ -4,6 +4,13 @@ Toutes les évolutions notables de Rocket Auth. Le format suit [Keep a Changelog
 
 ## [Non publié]
 
+### Ajouté
+
+- **Déconnexion back-channel** (OpenID Connect Back-Channel Logout 1.0) : les clients ont une **URL de déconnexion back-channel** (fiche du client, `backchannelLogoutUri`, 8ᵉ champ de `DEMO_OAUTH_CLIENTS`) où Rocket Auth envoie, en arrière-plan et avec nouvelles tentatives, un jeton de déconnexion signé (`iss`, `aud`, `sub`, `sid`, `events`, `iat`, `exp`, `jti`) quand l'utilisateur se déconnecte, ou qu'un administrateur désactive ou supprime son compte. Annoncée dans la découverte (`backchannel_logout_supported`, `backchannel_logout_session_supported`).
+- **Sessions Rocket Auth** (`sid`) : se déconnecter révoque les jetons de rafraîchissement obtenus dans cette session et déconnecte les applications où l'utilisateur s'y est connecté ; désactiver ou supprimer un compte révoque tous ses jetons. Le jeton d'identité porte `sid`.
+- `POST /oauth/suite/register` : une brique de la suite déclare elle-même son URL de déconnexion back-channel, authentifiée comme son client.
+- **Appels entre briques** : les identifiants client acceptent `audience` (le client ID d'un client actif, sinon `invalid_target`) ; le jeton d'accès porte `aud` = l'application appelée, `azp` = l'appelante, et vaut 5 minutes. Les clients de démo ont le flux identifiants client.
+
 ## [0.1.0] - 2026-09-25
 
 Première version de Rocket Auth, le fournisseur d'identité (SSO) du Middleware Rocket.

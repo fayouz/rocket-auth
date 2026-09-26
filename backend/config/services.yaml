@@ -7,7 +7,7 @@ parameters:
     env(OIDC_REFRESH_TOKEN_TTL): '2592000'
     env(FRONTEND_URL): 'http://localhost:3100'
     env(UPDATE_REPOSITORY): 'fayouz/rocket-auth'
-    # Demo OAuth clients (app:demo:seed): "clientId|Name|secret|redirect URI|post-logout URI", separated by ";".
+    # Demo OAuth clients (app:demo:seed): "clientId|Name|secret|redirect URI|post-logout URI|home URL|icon|back-channel logout URI", separated by ";".
     env(DEMO_OAUTH_CLIENTS): ''
 
 services:

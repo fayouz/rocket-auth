@@ -47,9 +47,14 @@ class RefreshToken
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $revokedAt = null;
 
+    /** Rocket Auth session in which it was obtained: signing out of that session revokes it. */
+    #[ORM\Column(length: 64, nullable: true)]
+    private ?string $sid;
+
     /** @param list<string> $scopes */
-    public function __construct(string $tokenHash, OAuthClient $client, User $user, array $scopes, \DateTimeImmutable $authTime, \DateTimeImmutable $createdAt, \DateTimeImmutable $expiresAt)
+    public function __construct(string $tokenHash, OAuthClient $client, User $user, array $scopes, \DateTimeImmutable $authTime, \DateTimeImmutable $createdAt, \DateTimeImmutable $expiresAt, ?string $sid = null)
     {
+        $this->sid = $sid;
         $this->id = Uuid::v7();
         $this->tokenHash = $tokenHash;
         $this->client = $client;
@@ -79,6 +84,11 @@ class RefreshToken
     public function getAuthTime(): \DateTimeImmutable
     {
         return $this->authTime;
+    }
+
+    public function getSid(): ?string
+    {
+        return $this->sid;
     }
 
     public function isActive(\DateTimeImmutable $now): bool

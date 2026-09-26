@@ -51,9 +51,14 @@ class AuthorizationCode
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $usedAt = null;
 
+    /** Rocket Auth session ("sid" claim of the session) in which the user signed in to the application. */
+    #[ORM\Column(length: 64, nullable: true)]
+    private ?string $sid;
+
     /** @param list<string> $scopes */
-    public function __construct(string $codeHash, OAuthClient $client, User $user, string $redirectUri, array $scopes, ?string $nonce, ?string $codeChallenge, \DateTimeImmutable $authTime, \DateTimeImmutable $expiresAt)
+    public function __construct(string $codeHash, OAuthClient $client, User $user, string $redirectUri, array $scopes, ?string $nonce, ?string $codeChallenge, \DateTimeImmutable $authTime, \DateTimeImmutable $expiresAt, ?string $sid = null)
     {
+        $this->sid = $sid;
         $this->id = Uuid::v7();
         $this->codeHash = $codeHash;
         $this->client = $client;
@@ -120,5 +125,10 @@ class AuthorizationCode
     public function markUsed(\DateTimeImmutable $at): void
     {
         $this->usedAt = $at;
+    }
+
+    public function getSid(): ?string
+    {
+        return $this->sid;
     }
 }

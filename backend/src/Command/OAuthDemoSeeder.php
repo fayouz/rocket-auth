@@ -14,8 +14,9 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
  * Demo OAuth clients: the applications of the Rocket middleware (DEMO_OAUTH_CLIENTS), each with a known secret,
  * plus an admin group for the demo accounts.
  *
- * DEMO_OAUTH_CLIENTS: "clientId|Name|secret|redirect URI|post-logout URI|home URL|icon" entries separated by ";"
- * (the home URL and the icon put the application in the switcher of the suite).
+ * DEMO_OAUTH_CLIENTS: "clientId|Name|secret|redirect URI|post-logout URI|home URL|icon|back-channel logout URI" entries
+ * separated by ";" (the home URL and the icon put the application in the switcher of the suite; the back-channel logout
+ * URI is optional: the bricks declare it themselves). They may call each other (client credentials).
  */
 final class OAuthDemoSeeder implements DemoSeederInterface
 {
@@ -38,7 +39,7 @@ final class OAuthDemoSeeder implements DemoSeederInterface
 
         $rows = [];
         foreach (array_filter(array_map('trim', explode(';', $this->demoClients))) as $entry) {
-            [$clientId, $name, $secret, $redirectUri, $logoutUri, $homeUrl, $icon] = array_map('trim', explode('|', $entry)) + [3 => '', 4 => '', 5 => '', 6 => ''];
+            [$clientId, $name, $secret, $redirectUri, $logoutUri, $homeUrl, $icon, $backchannelUri] = array_map('trim', explode('|', $entry)) + [3 => '', 4 => '', 5 => '', 6 => '', 7 => ''];
             $client = $this->clients->findOneBy(['clientId' => $clientId]) ?? (new OAuthClient())->setClientId($clientId);
             $client->setName($name)
                 ->setDescription('Application de démonstration de la couche Middleware Rocket.')
@@ -48,10 +49,14 @@ final class OAuthDemoSeeder implements DemoSeederInterface
                 ->setHomeUrl($homeUrl)
                 ->setIcon($icon)
                 ->setAllowedScopes(['openid', 'email', 'profile', 'groups', 'offline_access'])
-                ->setGrantTypes(['authorization_code', 'refresh_token'])
+                // Calls between the bricks: tokens of the application for itself.
+                ->setGrantTypes(['authorization_code', 'refresh_token', 'client_credentials'])
                 // Applications of the same organization: no consent screen.
                 ->setTrusted(true)
                 ->setEnabled(true);
+            if ('' !== $backchannelUri) {
+                $client->setBackchannelLogoutUri($backchannelUri);
+            }
             $client->useSecret($secret);
             $this->em->persist($client);
             $rows[] = [$clientId, $name, $redirectUri];
