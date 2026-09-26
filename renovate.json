@@ -1,17 +1,45 @@
 {
   "$schema": "https://docs.renovatejs.org/renovate-schema.json",
-  "extends": ["config:recommended"],
-  "description": "Only rocket-core is updated automatically: one pull request for the bundle, the Nuxt layer and the reusable CI workflows.",
-  "enabledManagers": ["composer", "npm", "github-actions"],
+  "extends": [
+    "config:recommended"
+  ],
+  "description": "Only rocket-core is updated automatically: one pull request for the bundle, the Nuxt layer and the reusable CI workflows. Patch versions merge themselves once CI is green; minor versions (breaking while in 0.x) wait for a review.",
+  "enabledManagers": [
+    "composer",
+    "npm",
+    "github-actions"
+  ],
   "packageRules": [
     {
-      "matchPackageNames": ["*", "!rocket/core-bundle", "!@rocket/core", "!fayouz/rocket-core"],
+      "matchPackageNames": [
+        "*",
+        "!rocket/core-bundle",
+        "!@rocket/core",
+        "!fayouz/rocket-core"
+      ],
       "enabled": false
     },
     {
-      "matchPackageNames": ["rocket/core-bundle", "@rocket/core", "fayouz/rocket-core"],
+      "matchPackageNames": [
+        "rocket/core-bundle",
+        "@rocket/core",
+        "fayouz/rocket-core"
+      ],
       "groupName": "rocket-core",
       "rangeStrategy": "bump"
+    },
+    {
+      "matchPackageNames": [
+        "rocket/core-bundle",
+        "@rocket/core",
+        "fayouz/rocket-core"
+      ],
+      "matchUpdateTypes": [
+        "patch"
+      ],
+      "automerge": true,
+      "automergeType": "pr",
+      "platformAutomerge": false
     }
   ]
 }
